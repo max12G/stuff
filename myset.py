@@ -1,7 +1,3 @@
-
-
-
-
 class myset:
     def __init__(self, elements: list = []):
         self.elements = self.prepare_list(elements)
@@ -24,8 +20,7 @@ class myset:
                 raise IndexError("myset() index out of range")
         if isinstance(key, slice):
             return myset(self.elements[key])
-    
-        
+
     def __repr__(self):
         return "{" + ", ".join(map(str, self.elements)) + "}"
 
@@ -33,7 +28,7 @@ class myset:
         if item not in self.elements:
             self.elements.append(item)
             if not self.max:
-                self.max.append(item) 
+                self.max.append(item)
                 self.min.append(item)
                 return
             if item > self.max[0]:
@@ -52,12 +47,12 @@ class myset:
         if result in self.min:
             self.min.remove(result)
         if result in self.max:
-            self.max.remove(result)                             
+            self.max.remove(result)
         return result
-    
+
     def get_min(self):
         return self.min[-1]
-    
+
     def get_max(self):
         return self.max[-1]
 
@@ -71,14 +66,14 @@ class myset:
                 i -= 1
             i += 1
         return elements
-    
+
     def unity(self, other):
         new_elements = []
         for i in self.elements:
             if i in other.elements:
                 new_elements.append(i)
         return myset(new_elements)
-    
+
     def split(self, other):
         new_elements = []
         new_elements = self.elements.copy()
@@ -86,7 +81,7 @@ class myset:
             if i not in new_elements:
                 new_elements.append(i)
         return myset(new_elements)
-    
+
     def xor(self, other):
         new_elements = []
         for i in self.elements:
@@ -96,6 +91,3 @@ class myset:
             if i not in self.elements:
                 new_elements.append(i)
         return myset(new_elements)
-    
-
-
