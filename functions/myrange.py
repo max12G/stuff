@@ -334,9 +334,14 @@ class geometry_prog:
 
     def __iter__(self):
         curr = self.start
-        while curr < self.end:
-            yield round(curr, 5)
-            curr *= self.step
+        if self.end > 0:
+            while curr < self.end:
+                yield round(curr, 5)
+                curr *= self.step
+        else:
+            while curr > self.end:
+                yield round(curr, 5)
+                curr *= self.step
 
     def __contains__(self, item):
         if item > self.end:

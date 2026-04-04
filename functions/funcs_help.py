@@ -1,5 +1,20 @@
 from time import perf_counter, sleep
 
+
+def binsearch(target, source):
+    left = 0
+    right = len(source) - 1
+    while left <= right:
+        middle = (left + right) // 2
+        if target > source[middle]:
+            left = middle + 1
+        elif target == source[middle]:
+            return middle
+        else:
+            right = middle - 1
+    return left
+
+
 def safe_wraps(func: callable) -> callable:
     def decorator(wrapper: callable) -> callable:
         wrapper.__name__ = func.__name__
