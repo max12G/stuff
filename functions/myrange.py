@@ -1,7 +1,7 @@
 import math
 
 
-class myrange:
+class ext_range:
     __slots__ = "start", "end", "step", "flag_to_str"
 
     def __init__(self, *args):
@@ -100,8 +100,8 @@ class myrange:
             new_len = max(0, (end - start + step - (1 if step > 0 else -1)) // step)
             new_end = new_start + new_len * new_step
             if self.flag_to_str:
-                return myrange(chr(new_start), chr(new_end), new_step)
-            return myrange(new_start, new_end, new_step)
+                return ext_range(chr(new_start), chr(new_end), new_step)
+            return ext_range(new_start, new_end, new_step)
 
     def __repr__(self):
         if self.flag_to_str:
@@ -114,10 +114,10 @@ class myrange:
         start = self[-1]
         step = self.step * -1
         end = self.start + step
-        return myrange(start, end, step)
+        return ext_range(start, end, step)
 
     def __eq__(self, other):
-        if not isinstance(other, myrange):
+        if not isinstance(other, ext_range):
             return NotImplemented
         size = len(self)
         if size != len(other):
@@ -414,11 +414,11 @@ class geometry_prog:
             return None
         if abs(self.step) > 1:
             if self.step < 0:
-                return max(self[-1], self[-2])
+                return max([self.start, self[1], self[-1], self[-2]])
             return self[-1]
         else:
             if self.step < 0:
-                return max(self.start, self[1])
+                return max([self.start, self[1], self[-1], self[-2]])
             return self.start
 
     def min(self):
@@ -426,11 +426,11 @@ class geometry_prog:
             return None
         if abs(self.step) < 1:
             if self.step < 0:
-                return min(self[-1], self[-2])
+                return min([self.start, self[1], self[-1], self[-2]])
             return self[-1]
         else:
             if self.step < 0:
-                return max(self.start, self[1])
+                return min([self.start, self[1], self[-1], self[-2]])
             return self.start
 
     def info(self):
