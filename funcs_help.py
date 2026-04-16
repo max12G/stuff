@@ -53,6 +53,10 @@ class func_cache:
         self.storage = {}
         self.wrap_func = self._setup(func)
         self.__name__ = func.__name__
+        self.__doc__ = func.__doc__
+        self.__module__ = func.__module__
+        self.__annotations__ = getattr(func, "__annotations__", {})
+        self.__wrapped__ = func
 
     def _setup(self, func):
         @safe_wraps(func)
@@ -184,3 +188,58 @@ def circuit_breaker(max_fails: int = 5, recovery_timeout: float = 0.5):
             
 
 
+import time
+
+# --- Тест 1: Кэширование (func_cache) ---
+@timer
+@func_cache
+def heavy_computation(n):
+    # Имитируем тяжелые вычисления
+    time.sleep(1)
+    return n * 2
+
+# --- Тест 2: Ограничение частоты (rate_limiter) ---
+# Ограничим: не более 2 вызовов в секунду
+@rate_limiter(calls=2, period=1)
+def api_request(i):
+    return f"Request {i} done"
+
+# --- Тест 3: Предохранитель (circuit_breaker) ---
+@circuit_breaker(max_fails=3, recovery_timeout=2)
+def unstable_service():
+    print("  [Service] Trying to work...")
+    raise ConnectionError("Server is down")
+
+# --- Запуск испытаний ---
+
+def run_performance_suite():
+    print("=== ИСПЫТАНИЕ 1: Кэширование ===")
+    print("Первый вызов (должен быть 1с):")
+    heavy_computation(10)
+    print("Повторный вызов (должен быть мгновенным):")
+    heavy_computation(10)
+    
+    print("\n=== ИСПЫТАНИЕ 2: Rate Limiter (2 вызова/сек) ===")
+    start = time.perf_counter()
+    for i in range(4):
+        print(f"  {api_request(i)} at {time.perf_counter() - start:.2f}s")
+
+    print("\n=== ИСПЫТАНИЕ 3: Circuit Breaker ===")
+    for i in range(5):
+        try:
+            print(f"Попытка {i+1}:")
+            unstable_service()
+        except Exception:
+            pass
+        time.sleep(0.1)
+    
+    print("\nОжидаем таймаут восстановления (2 сек)...")
+    time.sleep(2)
+    try:
+        print("Попытка после паузы (Half-Open):")
+        unstable_service()
+    except Exception:
+        print("Система все еще нестабильна, цепь снова разомкнута.")
+
+if __name__ == "__main__":
+    run_performance_suite()

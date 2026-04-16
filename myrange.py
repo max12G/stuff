@@ -70,9 +70,9 @@ class ext_range:
 
     def __len__(self):
         if self.step > 0 and self.start < self.end:
-            return (self.end - self.start - 1) // self.step + 1
+            return int((self.end - self.start - 1) // self.step + 1)
         elif self.step < 0 and self.start > self.end:
-            return (self.start - self.end - 1) // (-self.step) + 1
+            return int((self.start - self.end - 1) // (-self.step) + 1)
         return 0
 
     def __getitem__(self, key):
@@ -445,3 +445,4 @@ class geometry_prog:
         print(f" mean -> {self.mean()}")
         print(f" sum -> {self.sum()}")
         print(f" size -> {len(self)}")
+

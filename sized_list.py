@@ -1,5 +1,5 @@
-from functions.myrange import geometry_prog
-from functions.funcs_help import binsearch
+from myrange import geometry_prog
+from funcs_help import binsearch
 
 class sized_list:
     def __init__(self, size = 0, state = []):
