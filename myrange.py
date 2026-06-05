@@ -1,12 +1,13 @@
 import math
-
+from typing import Any
+#type: ignore
 
 class ext_range:
     __slots__ = "start", "end", "step", "flag_to_str"
 
-    def __init__(self, *args):
-        self.step = 1
-        self.start = 0
+    def __init__(self, *args: Any):
+        self.step: float | int = 1
+        self.start: float| int = 0
         self.flag_to_str = False
         n = len(args)
         if n == 1:
